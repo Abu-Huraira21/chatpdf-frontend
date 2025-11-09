@@ -27,8 +27,8 @@ FROM nginx:alpine AS runner
 # Copy build output from the builder stage
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Uncomment and provide a custom config if needed
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Use custom nginx configuration (handles SPA routing and .mjs MIME type)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
