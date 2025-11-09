@@ -15,7 +15,7 @@ export interface Document {
   file_size: number;
   file_size_formatted?: string;  // Backend provides formatted size
   pages: number;  // Changed from 'page_count' to match backend
-  processing_status: 'pending' | 'queued' | 'processing' | 'completed' | 'failed' | 'error';
+  processing_status: 'pending' | 'processing' | 'completed' | 'failed' | 'error';
   processing_error?: string;
   processed_at?: string;
   is_processed: boolean;

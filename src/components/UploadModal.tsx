@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Upload, FileText, X, Check } from 'lucide-react';
 import {
   Dialog,
@@ -19,16 +19,6 @@ interface UploadModalProps {
   onOpenChange: (open: boolean) => void;
   onUploadComplete?: (fileName: string) => void;
 }
-
-const formatFileNameWithEllipsis = (name: string, prefixLength = 40, suffixLength = 6) => {
-  if (!name) return '';
-  if (name.length <= prefixLength + suffixLength + 3) {
-    return name;
-  }
-  const prefix = name.slice(0, prefixLength);
-  const suffix = name.slice(-suffixLength);
-  return `${prefix}…${suffix}`;
-};
 
 export function UploadModal({ open, onOpenChange, onUploadComplete }: UploadModalProps) {
   const [dragActive, setDragActive] = useState(false);
@@ -128,7 +118,7 @@ export function UploadModal({ open, onOpenChange, onUploadComplete }: UploadModa
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-[28rem]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Upload a New Document</DialogTitle>
           <DialogDescription>
@@ -163,17 +153,12 @@ export function UploadModal({ open, onOpenChange, onUploadComplete }: UploadModa
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200 w-full overflow-hidden">
+              <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <div className="flex-shrink-0 mt-1">
                   <FileText className="h-8 w-8 text-blue-600" />
                 </div>
-                <div className="flex-1 min-w-0 overflow-hidden">
-                  <p
-                    className="text-sm text-gray-900"
-                    title={selectedFile.name}
-                  >
-                    {formatFileNameWithEllipsis(selectedFile.name)}
-                  </p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-900 truncate">{selectedFile.name}</p>
                   <p className="text-xs text-gray-500 mt-1">
                     {formatFileSize(selectedFile.size)}
                   </p>
@@ -213,7 +198,7 @@ export function UploadModal({ open, onOpenChange, onUploadComplete }: UploadModa
           )}
         </div>
 
-        <DialogFooter className="flex flex-wrap items-center gap-2 justify-end">
+        <DialogFooter>
           <Button variant="outline" onClick={handleClose} disabled={isUploading}>
             Cancel
           </Button>

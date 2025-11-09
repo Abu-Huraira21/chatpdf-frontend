@@ -20,7 +20,7 @@ export interface AuthState {
   // Actions
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
   checkAuth: () => Promise<void>;
   clearError: () => void;
   updateProfile: (data: ProfileUpdateData) => Promise<void>;
@@ -41,12 +41,6 @@ export const useAuthStore = create<AuthState>()(
           set({ isLoading: true, error: null });
           try {
             const response = await AuthService.login(credentials);
-            
-            // Save user settings if included in login response
-            if (response.settings) {
-              localStorage.setItem('user_settings', JSON.stringify(response.settings));
-            }
-            
             set({ 
               user: response.user, 
               isAuthenticated: true, 
@@ -88,21 +82,20 @@ export const useAuthStore = create<AuthState>()(
         },
 
         // Logout action
-        logout: async () => {
+        logout: () => {
           try {
-            await AuthService.logout();
+            AuthService.logout();
           } catch (error) {
-            console.warn('Client logout encountered an error:', error);
+            // Silent fail for logout
           }
-
+          
           // Reset auth state
           set({ 
             user: null, 
             isAuthenticated: false, 
-            isLoading: false,
             error: null 
           });
-
+          
           // Reset documents store
           useDocumentsStore.getState().reset();
           console.log('🚪 Logout complete - all stores reset');
@@ -112,55 +105,21 @@ export const useAuthStore = create<AuthState>()(
         checkAuth: async () => {
           set({ isLoading: true });
           try {
-            // Check if we have tokens
-            const hasTokens = TokenManager.isAuthenticated();
-            
-            if (!hasTokens) {
-              // No tokens at all - definitely not authenticated
-              set({ 
-                user: null, 
-                isAuthenticated: false, 
-                isLoading: false 
-              });
-              return;
-            }
-            
-            // We have tokens - try to fetch user profile
-            // The API client will automatically refresh the token if it's expired
-            try {
+            if (TokenManager.isAuthenticated()) {
               const user = await AuthService.getProfile();
               set({ 
                 user, 
                 isAuthenticated: true, 
                 isLoading: false 
               });
-            } catch (profileError: any) {
-              // Profile fetch failed - check if it's a 401 (auth failed)
-              if (profileError.status === 401) {
-                // Token refresh also failed - truly unauthenticated
-                console.log('🔒 Authentication expired - tokens invalid');
-                TokenManager.clearTokens();
-                set({ 
-                  user: null, 
-                  isAuthenticated: false, 
-                  isLoading: false
-                });
-              } else {
-                // Other error (network, etc) - don't log out
-                // Keep user logged in and retry later
-                console.warn('⚠️ Profile fetch failed, but keeping user logged in:', profileError.message);
-                const cachedUser = TokenManager.getUser();
-                set({ 
-                  user: cachedUser, 
-                  isAuthenticated: !!cachedUser, 
-                  isLoading: false,
-                  error: 'Could not verify authentication. Please check your connection.'
-                });
-              }
+            } else {
+              set({ 
+                user: null, 
+                isAuthenticated: false, 
+                isLoading: false 
+              });
             }
           } catch (error: any) {
-            // Unexpected error
-            console.error('❌ Unexpected error in checkAuth:', error);
             set({ 
               user: null, 
               isAuthenticated: false, 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FileText } from 'lucide-react';
 import { Header } from './components/Header';
 import { ChatPanel } from './components/ChatPanel';

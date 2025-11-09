@@ -507,9 +507,7 @@ export function DocumentPreview({
               <AlertCircle className="h-16 w-16 text-red-500 mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load PDF</h3>
               <p className="text-gray-600 text-center mb-4">{error}</p>
-              <p className="text-sm text-gray-500" title={document.name}>
-                Document: <span className="inline-block max-w-[220px] truncate align-bottom">{document.name}</span>
-              </p>
+              <p className="text-sm text-gray-500">Document: {document.name}</p>
             </div>
           </div>
         ) : !pdfUrl ? (

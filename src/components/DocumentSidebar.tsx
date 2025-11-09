@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, Upload, MoreVertical, ChevronLeft, ChevronRight, Clock, Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { FileText, Upload, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import {
@@ -12,34 +12,6 @@ import { toast } from 'sonner';
 import { FileValidator, ErrorUtils } from '../services';
 import { useDocumentsStore } from '../stores';
 import type { Document } from '../App';
-import { ProcessingProgress } from './ProcessingProgress';
-
-const formatDocumentName = (name: string, maxLength = 36) => {
-  if (!name) {
-    return '';
-  }
-
-  if (name.length <= maxLength) {
-    return name;
-  }
-
-  const extensionMatch = name.match(/\.[^./\\]+$/);
-  const extension = extensionMatch ? extensionMatch[0] : '';
-  const baseName = extension ? name.slice(0, -extension.length) : name;
-
-  const availableLength = maxLength - extension.length - 3; // reserve for ellipsis
-  if (availableLength <= 0) {
-    return `${baseName.slice(0, maxLength - 3)}...`;
-  }
-
-  const startLength = Math.max(1, Math.ceil(availableLength * 0.6));
-  const endLength = Math.max(1, availableLength - startLength);
-
-  const start = baseName.slice(0, startLength);
-  const end = baseName.slice(-endLength);
-
-  return `${start}...${end}${extension}`;
-};
 
 interface DocumentSidebarProps {
   documents: Document[];
@@ -90,17 +62,12 @@ export function DocumentSidebar({
       size: doc.file_size_formatted || `${(doc.file_size / (1024 * 1024)).toFixed(1)} MB`,
       uploadDate: new Date(doc.upload_date),
       file_url: doc.file_url,  // Include file_url for PDF preview
-      processing_status: doc.processing_status,
-      can_be_queried: doc.can_be_queried,
     }));
     
     console.log('📋 DocumentSidebar: Syncing to App.tsx, formatted docs:', formattedDocs.length);
     console.log('🔗 DocumentSidebar: First doc file_url:', formattedDocs[0]?.file_url);
-    
-    if (onDocumentsChange) {
-      onDocumentsChange(formattedDocs);
-    }
-  }, [storeDocuments]);
+    onDocumentsChange?.(formattedDocs);
+  }, [storeDocuments, onDocumentsChange]);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -234,34 +201,7 @@ export function DocumentSidebar({
 
       <ScrollArea className="flex-1">
         <div className="px-4 pb-4 space-y-2">
-          {/* Show processing documents */}
-          {documents
-            .filter((doc) => {
-              // Only show documents that are actively being processed (not completed/failed/undefined)
-              const status = doc.processing_status;
-              return status && status !== 'completed' && status !== 'failed' && status !== 'error';
-            })
-            .map((doc) => (
-              <ProcessingProgress
-                key={doc.id}
-                documentId={doc.id}
-                documentName={doc.name}
-                onComplete={() => {
-                  fetchDocuments();
-                  toast.success(`${doc.name} is ready!`);
-                }}
-                onError={(error) => {
-                  toast.error(`Failed to process ${doc.name}: ${error}`);
-                  fetchDocuments();
-                }}
-              />
-            ))}
-          
-          {/* Show completed documents */}
-          {documents.filter((doc) => {
-            // Show completed documents or documents without a processing_status (legacy)
-            return !doc.processing_status || doc.processing_status === 'completed';
-          }).map((doc) => (
+          {documents.map((doc) => (
             <div
               key={doc.id}
               className={`group flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
@@ -269,13 +209,7 @@ export function DocumentSidebar({
                   ? 'bg-blue-600 bg-opacity-20 border border-blue-500'
                   : 'bg-gray-800 hover:bg-gray-750 border border-transparent'
               }`}
-              onClick={() => {
-                if (doc.can_be_queried !== false) {
-                  onSelectDocument(doc);
-                } else {
-                  toast.info('This document is still being processed');
-                }
-              }}
+              onClick={() => onSelectDocument(doc)}
             >
               <div className="flex-shrink-0 mt-0.5">
                 <FileText
@@ -286,12 +220,11 @@ export function DocumentSidebar({
               </div>
               <div className="flex-1 min-w-0">
                 <p
-                  title={doc.name}
-                  className={`text-sm whitespace-nowrap overflow-hidden ${
+                  className={`text-sm truncate ${
                     selectedDocument?.id === doc.id ? 'text-white' : 'text-gray-200'
                   }`}
                 >
-                  {formatDocumentName(doc.name)}
+                  {doc.name}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
                   {doc.pages} pages · {doc.size}
