@@ -1,0 +1,94 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Vite cache
+node_modules/.vite
+.vite
+
+# Dependencies
+node_modules/
+
+# Builds
+build/
+dist/
+.next/
+
+# Static exports
+out/
+
+# Storybook
+storybook-static/
+
+# Testing
+coverage/
+
+# Misc
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.orig
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local IDE/editor settings
+.vscode/
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# npm cache directories
+.npm
+
+# Optional npm cache directory
+tmp/
+
+# Parcel cache
+.cache/
+.parcel-cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# eslint cache
+.eslintcache
+
+# Stylelint cache
+.stylelintcache
+
+# SvelteKit build artifacts
+.svelte-kit
+
+# VS Code testing temp files
+.vscode-test/
+
+# Docker artifacts
+*.tar
+Dockerfile*
+
+# Local secrets or keys
+*.key
+*.pem
+*.crt
