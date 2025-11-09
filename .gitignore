@@ -86,7 +86,7 @@ tmp/
 
 # Docker artifacts
 *.tar
-Dockerfile*
+
 
 # Local secrets or keys
 *.key
