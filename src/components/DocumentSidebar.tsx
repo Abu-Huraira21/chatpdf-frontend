@@ -12,6 +12,21 @@ import { toast } from 'sonner';
 import { FileValidator, ErrorUtils } from '../services';
 import { useDocumentsStore } from '../stores';
 import type { Document } from '../App';
+import { API_CONFIG } from '../services/api';
+
+const resolveFileUrl = (url?: string | null): string | undefined => {
+  if (!url) {
+    return undefined;
+  }
+
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+
+  const base = API_CONFIG.BASE_URL.replace(/\/$/, '');
+  const path = url.startsWith('/') ? url : `/${url}`;
+  return `${base}${path}`;
+};
 
 interface DocumentSidebarProps {
   documents: Document[];
@@ -61,7 +76,7 @@ export function DocumentSidebar({
       pages: doc.pages || 0,
       size: doc.file_size_formatted || `${(doc.file_size / (1024 * 1024)).toFixed(1)} MB`,
       uploadDate: new Date(doc.upload_date),
-      file_url: doc.file_url,  // Include file_url for PDF preview
+      file_url: resolveFileUrl(doc.file_url),  // Include file_url for PDF preview
     }));
     
     console.log('📋 DocumentSidebar: Syncing to App.tsx, formatted docs:', formattedDocs.length);
@@ -111,6 +126,7 @@ export function DocumentSidebar({
         pages: uploadedDoc.pages || 0,
         size: uploadedDoc.file_size_formatted || `${(uploadedDoc.file_size / (1024 * 1024)).toFixed(1)} MB`,
         uploadDate: new Date(uploadedDoc.upload_date),
+        file_url: resolveFileUrl(uploadedDoc.file_url),
       };
       
       // Select the newly uploaded document
