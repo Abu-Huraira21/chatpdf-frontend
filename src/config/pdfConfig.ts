@@ -6,11 +6,9 @@
  */
 
 import { pdfjs } from 'react-pdf';
+import pdfWorkerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
-// Use local worker file from node_modules
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
-).toString();
+// Use the bundled worker URL emitted by Vite
+pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
 
 export default pdfjs;
