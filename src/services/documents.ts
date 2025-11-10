@@ -6,6 +6,22 @@
 
 import { apiClient, API_CONFIG, ApiException } from './api';
 
+// Utility: resolve relative URLs against the configured API base
+const resolveFileUrl = (url?: string | null): string | undefined => {
+  if (!url) {
+    return undefined;
+  }
+
+  // Treat already-absolute URLs as-is
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+
+  const base = API_CONFIG.BASE_URL.replace(/\/$/, '');
+  const path = url.startsWith('/') ? url : `/${url}`;
+  return `${base}${path}`;
+};
+
 // Type definitions matching backend models
 export interface Document {
   id: string;
@@ -60,16 +76,28 @@ export class DocumentService {
       page_size: pageSize.toString(),
     });
 
-    return apiClient.get<DocumentListResponse>(
+    const response = await apiClient.get<DocumentListResponse>(
       `${API_CONFIG.ENDPOINTS.DOCUMENTS.LIST}?${params}`
     );
+
+    return {
+      ...response,
+      results: response.results.map((doc) => ({
+        ...doc,
+        file_url: resolveFileUrl(doc.file_url),
+      })),
+    };
   }
 
   /**
    * Get document by ID
    */
   static async getDocument(id: string): Promise<Document> {
-    return apiClient.get<Document>(API_CONFIG.ENDPOINTS.DOCUMENTS.DETAIL(id));
+    const doc = await apiClient.get<Document>(API_CONFIG.ENDPOINTS.DOCUMENTS.DETAIL(id));
+    return {
+      ...doc,
+      file_url: resolveFileUrl(doc.file_url),
+    };
   }
 
   /**
@@ -89,7 +117,10 @@ export class DocumentService {
         formData
       );
 
-      return response;
+      return {
+        ...response,
+        file_url: resolveFileUrl(response.file_url),
+      };
     } catch (error) {
       if (error instanceof ApiException) {
         throw error;
@@ -118,18 +149,28 @@ export class DocumentService {
    * Reprocess document (trigger re-chunking and embedding)
    */
   static async reprocessDocument(id: string): Promise<Document> {
-    return apiClient.post<Document>(
+    const doc = await apiClient.post<Document>(
       `${API_CONFIG.ENDPOINTS.DOCUMENTS.DETAIL(id)}/reprocess/`
     );
+
+    return {
+      ...doc,
+      file_url: resolveFileUrl(doc.file_url),
+    };
   }
 
   /**
    * Check if document processing is complete
    */
   static async checkProcessingStatus(id: string): Promise<Document> {
-    return apiClient.get<Document>(
+    const doc = await apiClient.get<Document>(
       `${API_CONFIG.ENDPOINTS.DOCUMENTS.DETAIL(id)}/status/`
     );
+
+    return {
+      ...doc,
+      file_url: resolveFileUrl(doc.file_url),
+    };
   }
 
   /**
