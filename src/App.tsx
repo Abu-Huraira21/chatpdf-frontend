@@ -91,7 +91,7 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
-      logout();
+      await logout();
       setAuthView('login');
       toast.success('You have been logged out successfully.');
     } catch (error) {

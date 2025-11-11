@@ -122,21 +122,19 @@ export class AuthService {
   static async logout(): Promise<void> {
     const refreshToken = TokenManager.getRefreshToken();
 
-    // Clear client-side tokens immediately to prevent re-authentication
-    TokenManager.clearTokens();
-    localStorage.removeItem('user_settings');
-
-    if (!refreshToken) {
-      return;
-    }
-
     try {
-      await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.LOGOUT, {
-        refresh_token: refreshToken,
-      });
+      if (refreshToken) {
+        await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.LOGOUT, {
+          refresh_token: refreshToken,
+        });
+      }
     } catch (error) {
       // Logout on client side even if server request fails
       console.warn('Logout request failed:', error);
+    } finally {
+      // Always clear client-side tokens/settings
+      TokenManager.clearTokens();
+      localStorage.removeItem('user_settings');
     }
   }
 

@@ -20,7 +20,7 @@ export interface AuthState {
   // Actions
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   clearError: () => void;
   updateProfile: (data: ProfileUpdateData) => Promise<void>;
@@ -82,9 +82,9 @@ export const useAuthStore = create<AuthState>()(
         },
 
         // Logout action
-        logout: () => {
+        logout: async () => {
           try {
-            AuthService.logout();
+            await AuthService.logout();
           } catch (error) {
             // Silent fail for logout
           }
