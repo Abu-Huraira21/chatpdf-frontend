@@ -147,6 +147,10 @@ export class ApiClient {
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
+      const base = this.axiosInstance.defaults.baseURL || '';
+      if (base.includes('ngrok-free.app')) {
+        config.headers['ngrok-skip-browser-warning'] = 'true';
+      }
       return config;
     });
 
