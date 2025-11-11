@@ -8,8 +8,13 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 // API Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-export const API_WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000';
+const runtimeEnv = typeof import.meta !== 'undefined' ? (import.meta as any).env ?? {} : {};
+
+export const API_BASE_URL = runtimeEnv.VITE_API_BASE_URL || 'http://localhost:8000';
+export const API_WS_BASE_URL = runtimeEnv.VITE_WS_BASE_URL || 'ws://localhost:8000';
+
+console.log('API_BASE_URL', API_BASE_URL);
+console.log('API_WS_BASE_URL', API_WS_BASE_URL);
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
