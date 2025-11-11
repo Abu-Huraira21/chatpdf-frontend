@@ -25,7 +25,7 @@ interface ProfileModalProps {
   };
   onAvatarUpload: (file: File) => void;
   onPasswordChangeRequest: () => void;
-  onLogout: () => void;
+  onLogout: () => Promise<void>;
 }
 
 export function ProfileModal({
@@ -191,8 +191,8 @@ export function ProfileModal({
             <Button
               variant="outline"
               className="w-full justify-start text-gray-700 hover:bg-gray-100"
-              onClick={() => {
-                onLogout();
+              onClick={async () => {
+                await onLogout();
                 onOpenChange(false);
               }}
             >

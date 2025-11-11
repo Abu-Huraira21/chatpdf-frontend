@@ -380,12 +380,7 @@ export default function App() {
         userProfile={userProfile}
         onAvatarUpload={handleAvatarUpload}
         onPasswordChangeRequest={handlePasswordChangeRequest}
-        onLogout={() => {
-          toast.info('Logging out...');
-          setTimeout(() => {
-            setAuthView('login');
-          }, 1000);
-        }}
+        onLogout={handleLogout}
       />
 
       <ConfirmationModal
