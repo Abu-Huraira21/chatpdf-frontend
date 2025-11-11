@@ -17,3 +17,6 @@ declare namespace NodeJS {
     WS_BASE_URL?: string
   }
 }
+
+declare const __API_BASE_URL__: string | null | undefined
+declare const __API_WS_BASE_URL__: string | null | undefined

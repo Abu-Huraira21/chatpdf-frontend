@@ -8,15 +8,21 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 // API Configuration
-const importMetaEnv = typeof import.meta !== 'undefined' ? (import.meta as any).env ?? {} : {};
+const definedApiBase =
+  typeof __API_BASE_URL__ !== 'undefined' && __API_BASE_URL__ ? __API_BASE_URL__ : undefined;
+const definedWsBase =
+  typeof __API_WS_BASE_URL__ !== 'undefined' && __API_WS_BASE_URL__ ? __API_WS_BASE_URL__ : undefined;
 
 export const API_BASE_URL =
-  process.env.API_BASE_URL || importMetaEnv.VITE_API_BASE_URL || 'http://localhost:8000';
+  definedApiBase ??
+  (process.env.API_BASE_URL as string | undefined) ??
+  (typeof import.meta !== 'undefined' ? import.meta.env.VITE_API_BASE_URL : undefined) ??
+  'http://localhost:8000';
 export const API_WS_BASE_URL =
-  process.env.WS_BASE_URL || importMetaEnv.VITE_WS_BASE_URL || 'ws://localhost:8000';
-
-console.log('API_BASE_URL', API_BASE_URL);
-console.log('API_WS_BASE_URL', API_WS_BASE_URL);
+  definedWsBase ??
+  (process.env.WS_BASE_URL as string | undefined) ??
+  (typeof import.meta !== 'undefined' ? import.meta.env.VITE_WS_BASE_URL : undefined) ??
+  'ws://localhost:8000';
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
