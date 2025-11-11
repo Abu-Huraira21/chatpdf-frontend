@@ -65,7 +65,7 @@ export function Header({ document, onToggleSidebar, onSettingsClick, onShareClic
             </svg>
           </div>
           <div>
-            <h1 className="text-gray-900">DocChat AI</h1>
+            <h1 className="text-gray-900">ChatPdf</h1>
           </div>
         </div>
       </div>

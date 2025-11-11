@@ -135,7 +135,7 @@ export function SignupScreen({ onSignupSuccess, onSwitchToLogin }: SignupScreenP
         password_confirm: confirmPassword,
       });
 
-      toast.success('Account created successfully! Welcome to DocChat AI.', {
+      toast.success('Account created successfully! Welcome to ChatPdf.', {
         duration: 3000,
       });
 
@@ -208,7 +208,7 @@ export function SignupScreen({ onSignupSuccess, onSwitchToLogin }: SignupScreenP
                   />
                 </svg>
               </div>
-              <h1 className="text-white">DocChat AI</h1>
+              <h1 className="text-white">ChatPdf</h1>
             </div>
           </div>
 
@@ -216,7 +216,7 @@ export function SignupScreen({ onSignupSuccess, onSwitchToLogin }: SignupScreenP
             <div>
               <h2 className="mb-4 text-white">Chat with your PDFs, instantly.</h2>
               <p className="text-lg text-white opacity-90 leading-relaxed">
-                Upload any document and get instant insights. Ask questions, extract information, and understand your PDFs like never before.
+                Upload any document and get instant insights. Ask questions, extract information, and understand your PDFs with ChatPdf by your side.
               </p>
             </div>
 
@@ -292,8 +292,8 @@ export function SignupScreen({ onSignupSuccess, onSwitchToLogin }: SignupScreenP
         <div className="w-full max-w-md relative z-10">
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
             <div className="mb-8">
-              <h2 className="mb-2 text-gray-900">Create your account</h2>
-              <p className="text-gray-600">Get started with DocChat AI today</p>
+              <h2 className="mb-2 text-gray-900">Create your ChatPdf account</h2>
+              <p className="text-gray-600">Get started with ChatPdf today</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">

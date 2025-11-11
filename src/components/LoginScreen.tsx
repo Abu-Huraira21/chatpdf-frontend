@@ -81,7 +81,7 @@ export function LoginScreen({ onLoginSuccess, onSwitchToSignup }: LoginScreenPro
       });
 
       // Only execute success logic if login was successful
-      toast.success('Welcome back to DocChat AI!', {
+      toast.success('Welcome back to ChatPdf!', {
         duration: 3000,
       });
 
@@ -142,7 +142,7 @@ export function LoginScreen({ onLoginSuccess, onSwitchToSignup }: LoginScreenPro
                   />
                 </svg>
               </div>
-              <h1 className="text-white">DocChat AI</h1>
+              <h1 className="text-white" style={{ fontSize: '2rem' }}>ChatPdf</h1>
             </div>
           </div>
 
@@ -150,7 +150,7 @@ export function LoginScreen({ onLoginSuccess, onSwitchToSignup }: LoginScreenPro
             <div>
               <h2 className="mb-4 text-white">Welcome back!</h2>
               <p className="text-lg text-white opacity-90 leading-relaxed">
-                Sign in to continue chatting with your documents and accessing your AI-powered insights.
+                Sign in to continue chatting with your documents and accessing your ChatPdf-powered insights.
               </p>
             </div>
 
@@ -225,7 +225,7 @@ export function LoginScreen({ onLoginSuccess, onSwitchToSignup }: LoginScreenPro
         <div className="w-full max-w-md relative z-10">
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
             <div className="mb-8">
-              <h2 className="mb-2 text-gray-900">Sign in to your account</h2>
+              <h2 className="mb-2 text-gray-900">Sign in to ChatPdf</h2>
               <p className="text-gray-600">Welcome back! Please enter your details</p>
             </div>
 
@@ -388,7 +388,7 @@ export function LoginScreen({ onLoginSuccess, onSwitchToSignup }: LoginScreenPro
                 onClick={onSwitchToSignup}
                 className="text-blue-600 hover:text-blue-700 hover:underline transition-colors"
               >
-                Sign up for free
+                Sign up for ChatPdf
               </button>
             </p>
           </div>

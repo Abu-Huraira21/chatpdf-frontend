@@ -231,6 +231,10 @@ export default function App() {
     setAuthView('app');
   };
 
+  useEffect(() => {
+    document.title = authView === 'login' ? 'Login' : 'ChatPDF';
+  }, [authView]);
+
   if (authView === 'signup') {
     return (
       <>
