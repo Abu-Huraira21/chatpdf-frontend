@@ -5,8 +5,8 @@
 
   export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), 'VITE_');
-    const apiBaseUrl = env.VITE_API_BASE_URL ?? null;
-    const wsBaseUrl = env.VITE_WS_BASE_URL ?? null;
+    const apiBaseUrl = env.API_BASE_URL ?? null;
+    const wsBaseUrl = env.WS_BASE_URL ?? null;
 
     const processEnv = Object.keys(env).reduce((acc, key) => {
       const newKey = key.replace(/^VITE_/, '');
