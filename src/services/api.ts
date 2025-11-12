@@ -8,14 +8,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 
-console.log(import.meta.env.VITE_API_BASE_URL);
-console.log(import.meta.env.VITE_WS_BASE_URL);
 // API Configuration
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 export const API_WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000';
-
-console.log('API_BASE_URL', API_BASE_URL);
-console.log('API_WS_BASE_URL', API_WS_BASE_URL);
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
@@ -139,15 +134,22 @@ export class ApiClient {
       headers: {
         'Content-Type': 'application/json',
       },
+      // CRITICAL: Must send credentials when backend has CORS_ALLOW_CREDENTIALS = True
+      // Without this, browser will block the request even if preflight succeeds
+      withCredentials: true,
     });
 
-    // Request interceptor to add auth token
+    // Request interceptor to add auth token and ngrok header
     this.axiosInstance.interceptors.request.use((config) => {
       const accessToken = TokenManager.getAccessToken();
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
       const base = this.axiosInstance.defaults.baseURL || '';
+      // Add ngrok skip browser warning header for ngrok domains
+      if (base.includes('ngrok-free.app') || base.includes('ngrok.io')) {
+        config.headers['ngrok-skip-browser-warning'] = 'true';
+      }
       return config;
     });
 
